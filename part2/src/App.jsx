@@ -7,7 +7,7 @@ const Part=({part})=>{
   )
 }
 const Total=({parts})=>{
-  const total=parts[0].exercises+parts[1].exercises+parts[2].exercises+parts[3].exercises
+  const total=parts.reduce((s,p)=> s + p.exercises,0)
   return(
     <p> total of {total} exercises</p>
   )
@@ -33,7 +33,7 @@ const Course=({course})=>{
 }
 
 const App = () => {
-  const course = {
+  const courses = [{
     id: 1,
     name: 'Half Stack application development',
     parts: [
@@ -58,9 +58,31 @@ const App = () => {
         id: 4
       }
     ]
-  }
-
-  return <Course course={course} />
+  },{
+        name:'Node.js',
+        id: 2,
+        parts:[
+          {
+            name:'Routing',
+            exercises:3,
+            id:1
+          },
+          {
+            name:'Middlewares',
+            exercises:7,
+            id:2
+          }
+        ]
+      
+      }
+  
+    ]
+  return (
+  <div>
+    {courses.map(course=>(
+      <Course key={course.id} course={course} />
+    ))}
+  </div>)
 }
 
 export default App
