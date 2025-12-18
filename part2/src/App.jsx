@@ -22,6 +22,11 @@ const App = () => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
+  const existingName=persons.some(person=>person.name===newName)
+if (persons.some(person=>person.name===newName)){
+  alert(`${newName} is already added to phonebook`)
+  setNewName('')
+}
   return (
     <div>
       <h2>Phonebook</h2>
