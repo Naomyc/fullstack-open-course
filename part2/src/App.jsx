@@ -3,10 +3,6 @@ import { useEffect, useState } from "react";
 
 import axios from "axios"
 
-
-
-
-
 const Filter = (props) => {
   return (
     <div>
@@ -70,12 +66,14 @@ useEffect(()=>{
     event.preventDefault();
     const newObject = {
       name: newName,
-      id: persons.length + 1,
       number: newNumber,
-    };
-    setPersons(persons.concat(newObject));
+    }
+    axios
+    .post('http://localhost:3001/persons',newObject)
+    .then(response=>{setPersons(persons.concat(response.data))
     setNewName("");
     setNewNumber("");
+    })
   };
 
   const handlePersonChange = (event) => {
