@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import personsService from './services/persons'
 
 
 import axios from "axios"
@@ -56,10 +57,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 useEffect(()=>{
-  axios.get('http://localhost:3001/persons')
-  .then(response=>{
-  setPersons(response.data)
-  console.log(response)
+ personsService
+ .getAll()
+  .then(initialPersons=>{
+  setPersons(initialPersons)
+  console.log(initialPersons)
 })
 },[])
   const newPerson = (event) => {
@@ -68,13 +70,20 @@ useEffect(()=>{
       name: newName,
       number: newNumber,
     }
-    axios
-    .post('http://localhost:3001/persons',newObject)
-    .then(response=>{setPersons(persons.concat(response.data))
+    personsService
+    .create(newObject)
+    .then(returnedPerson=>{setPersons(persons.concat(returnedPerson))
     setNewName("");
     setNewNumber("");
     })
   };
+  const personsUpdate=id=>{
+    const person= persons.find(p=>p.id===id)
+    const changePerson={...person,number:newNumber}
+    personsService
+    .update(id,changePerson)
+    .then(returnedPerson=>{setPersons(persons.map(person=>person.id===id ? returnedPerson:person))})
+  }
 
   const handlePersonChange = (event) => {
     console.log(event.target.value);
