@@ -37,19 +37,22 @@ const PersonForm = (props) => {
     </div>
   );
 };
-const Persons = (props) => {
+const Persons = ({personsToShow,handleDelete}) => {
   return (
     <div>
       <ul>
-        {props.personsToShow.map((person) => (
+        {personsToShow.map((person) => (
           <li key={person.id}>
             {person.name}-{person.number}
+            <button onClick={()=>handleDelete(person.id,person.name)} >delete</button>
           </li>
         ))}
       </ul>
+      
     </div>
   );
 };
+
 const App = () => {
   const [persons, setPersons] = useState([]);
 
@@ -85,6 +88,16 @@ useEffect(()=>{
     .then(returnedPerson=>{setPersons(persons.map(person=>person.id===id ? returnedPerson:person))})
   }
 
+  const handleDelete=(id,name)=>{
+  
+  if (window.confirm(`Delete ${name}?`)){
+    personsService
+    .remove(id)
+    .then(()=>{
+      setPersons(persons.filter(p=>p.id !==id))
+    });
+  
+}}
   const handlePersonChange = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
@@ -118,7 +131,9 @@ useEffect(()=>{
         handleNumbers={handleNumbers}
       />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow} />
+      <Persons 
+      personsToShow={personsToShow}
+      handleDelete={handleDelete} />
     </div>
   );
 };
