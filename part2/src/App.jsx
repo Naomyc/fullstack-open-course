@@ -73,13 +73,30 @@ useEffect(()=>{
       name: newName,
       number: newNumber,
     }
+    const existingPerson = persons.find(person => person.name === newName);
+  if (existingPerson) {
+    if (window.confirm(`${newName} is already added to phonebook,replace the old number with new one?`)){
+      const updatedPerson={...existingPerson,number:newNumber};
+      personsService
+    .update(existingPerson.id,updatedPerson)
+    .then(returnedPerson=>{setPersons(persons.map(person=>person.id===existingPerson.id ? returnedPerson:person));
+    setNewName("")
+    setNewNumber("")
+    })}
+  
+    else{
+        return;
+      }}
+  else{
+    
     personsService
     .create(newObject)
     .then(returnedPerson=>{setPersons(persons.concat(returnedPerson))
     setNewName("");
     setNewNumber("");
     })
-  };
+  }
+}
   const personsUpdate=id=>{
     const person= persons.find(p=>p.id===id)
     const changePerson={...person,number:newNumber}
@@ -111,12 +128,7 @@ useEffect(()=>{
   const personsToShow = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
-  const existingName = persons.some((person) => person.name === newName);
-  if (persons.some((person) => person.name === newName)) {
-    alert(`${newName} is already added to phonebook`);
-    setNewName("");
-    return;
-  }
+  
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
